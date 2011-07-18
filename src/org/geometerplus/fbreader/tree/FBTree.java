@@ -60,7 +60,18 @@ public abstract class FBTree extends ZLTree<FBTree> implements Comparable<FBTree
 
 		@Override
 		public String toString() {
-			return Parent == null ? Id : Parent.toString() + " :: " + Id;
+			return Parent == null ? Id : Parent.toString() + " ::: " + Id;
+		}
+
+		public static Key fromString(String encoded) {
+			if (encoded == null) {
+				return null;
+			}
+			Key key = null;
+			for (String id : encoded.split(" ::: ")) {
+				key = new Key(key, id);
+			}
+			return key;
 		}
 	}
 

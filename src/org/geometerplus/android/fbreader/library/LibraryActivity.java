@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
@@ -84,9 +85,29 @@ public class LibraryActivity extends BaseActivity implements MenuItem.OnMenuItem
 		getListView().setOnCreateContextMenuListener(this);
 	}
 
+	static final ZLBooleanOption OpenPreviousPositionOption =
+		new ZLBooleanOption("Library", "openPreviousPosition", true);
+	static final ZLStringOption PositionKeyOption =
+		new ZLStringOption("Library", "positionKey", "");
+
+	@Override
+	protected void init(Intent intent) {
+		System.err.println("+ " + PositionKeyOption.getValue());
+		if (intent.getSerializableExtra(TREE_KEY_KEY) == null) {
+			intent.putExtra(TREE_KEY_KEY, FBTree.Key.fromString(PositionKeyOption.getValue()));
+		}
+		super.init(intent);
+		PositionKeyOption.setValue(getCurrentTree().getUniqueKey().toString());
+		System.err.println("- " + PositionKeyOption.getValue());
+	}
+
 	@Override
 	protected FBTree getTreeByKey(FBTree.Key key) {
-		return key != null ? LibraryInstance.getLibraryTree(key) : LibraryInstance.getRootTree();
+		FBTree tree = null;
+		if (key != null) {
+			tree = LibraryInstance.getLibraryTree(key);
+		}
+		return tree != null ? tree : LibraryInstance.getRootTree();
 	}
 
 	@Override
