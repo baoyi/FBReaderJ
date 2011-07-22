@@ -17,42 +17,23 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.fbreader.library;
+package org.geometerplus.android.fbreader.preferences;
 
-import java.util.Collections;
+import android.content.Context;
+import android.preference.CheckBoxPreference;
 
-public class AuthorTree extends LibraryTree {
-	public final Author Author;
+import org.geometerplus.zlibrary.core.resources.ZLResource;
 
-	AuthorTree(Author author) {
-		Author = author;
+abstract class ZLCheckBoxPreference extends CheckBoxPreference implements ZLPreference {
+	ZLCheckBoxPreference(Context context, ZLResource rootResource, String resourceKey) {
+		super(context);
+
+		ZLResource resource = rootResource.getResource(resourceKey);
+		setTitle(resource.getValue());
+		setSummaryOn(resource.getResource("summaryOn").getValue());
+		setSummaryOff(resource.getResource("summaryOff").getValue());
 	}
 
-	AuthorTree(LibraryTree parent, Author author, int position) {
-		super(parent, position);
-		Author = author;
-	}
-
-	@Override
-	public String getName() {
-		return
-			Author != null ?
-				Author.DisplayName :
-				Library.resource().getResource("unknownAuthor").getValue();
-	}
-
-	@Override
-	protected String getStringId() {
-		return "@AuthorTree" + getName() + ":" + getSortKey();
-	}
-
-	@Override
-	protected String getSortKey() {
-		return Author != null ? Author.SortKey : null;
-	}
-
-	@Override
-	public boolean containsBook(Book book) {
-		return book != null && book.authors().contains(Author);
+	public void onAccept() {
 	}
 }
