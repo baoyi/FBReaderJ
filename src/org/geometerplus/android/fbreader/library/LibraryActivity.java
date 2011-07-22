@@ -62,11 +62,6 @@ public class LibraryActivity extends BaseActivity implements MenuItem.OnMenuItem
 		if (myDatabase == null) {
 			myDatabase = new SQLiteBooksDatabase(this, "LIBRARY");
 		}
-		if (LibraryInstance == null) {
-			LibraryInstance = new Library();
-			startService(new Intent(getApplicationContext(), InitializationService.class));
-		}
-		LibraryInstance.addChangeListener(this);
 
 		final String selectedBookPath = getIntent().getStringExtra(SELECTED_BOOK_PATH_KEY);
 		mySelectedBook = null;
@@ -76,6 +71,15 @@ public class LibraryActivity extends BaseActivity implements MenuItem.OnMenuItem
 				mySelectedBook = Book.getByFile(file);
 			}
 		}
+
+		if (LibraryInstance == null) {
+			LibraryInstance = new Library();
+			if (mySelectedBook != null) {
+				LibraryInstance.addBookToLibrary(mySelectedBook);
+			}
+			startService(new Intent(getApplicationContext(), InitializationService.class));
+		}
+		LibraryInstance.addChangeListener(this);
 
 		final ListAdapter adapter = new LibraryListAdapter(this);
 		init(getIntent());

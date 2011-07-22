@@ -213,7 +213,7 @@ public final class Library {
 		}
 	}
 
-	private synchronized void addBookToLibrary(Book book) {
+	public synchronized void addBookToLibrary(Book book) {
 		myBooks.add(book);
 
 		List<Author> authors = book.authors();
